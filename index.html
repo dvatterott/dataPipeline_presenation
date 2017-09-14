@@ -19,7 +19,7 @@
 		<link rel="stylesheet" href="css/style.css" id="theme">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/solarized.css">
+		<link rel="stylesheet" href="lib/css/zenburn.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -84,26 +84,58 @@
 				</section>
 
 				<section>
-					<h3>IO operations housed in a parent object.</h3>
-					<p>All objects that derive variables then inherit IO operations.</p>
-					<ul>
-						<li class='fragment'>Preprocessing data.</li>
-						<li class='fragment'>Interpretting requested variables.</li>
-						<li class='fragment'>Delivering output.</li>
+					<section>
+						<h3>IO operations housed in a parent object.</h3>
+						<p>All objects that derive variables then inherit IO operations.</p>
+						<ul>
+							<li class='fragment'>Preprocessing data.</li>
+							<li class='fragment'>Interpretting requested variables.</li>
+							<li class='fragment'>Delivering output.</li>
+					</section>
+					<section>
+						<h3>Objects that create data inherit from parents.</h3>
+							<pre><code class="hljs" data-trim contenteditable>
+								class IO_Parent():
+								    def __init__(requested_variables, data):
+								        self.output = self.interpret_request(requested_variables)
+								        self.data = self.preprocess(data)
+
+								class Count(IO_Parent):
+								    def __init__(requested_variables, data):
+
+							</code></pre>
+					</section>
 				</section>
 
 				<section>
-					<h3>Common IO operations creates an API.</h3>
-					<p>Requested variables form API requests.</p>
-					<p>E.g.,</p>
-					<ul>
-						<li class='fragment' data-fragment-index="1">parameter1_parameter2_operation.</li>
-					</ul>
-					<pre><code class="hljs fragment" data-fragment-index="1" data-trim contenteditable>
-						requested_variable = 'timeKey_contentCategory_count'
-						CountObj = Counter(data, requested_variable)
-						desired_output = Counter.get_data()
-					</code></pre>
+					<section>
+						<h3>Common IO operations creates an API.</h3>
+						<p>Requested variables form API requests.</p>
+						<p>E.g.,</p>
+						<ul>
+							<li class='fragment' data-fragment-index="1">parameter1_parameter2_operation.</li>
+						</ul>
+						<div class="fragment" data-fragment-index="1">
+							<pre><code class="hljs" data-trim contenteditable>
+								requested_variable = 'timeKey_contentCategory_count'
+								CountObj = Counter(data, requested_variable)
+								desired_output = Counter.get_data()
+							</code></pre>
+						</div>
+					</section>
+					<section>
+						<h3>Use a dictionary to abstract gathering data.</h3>
+							<pre><code class="hljs" data-trim contenteditable>
+								method_dict = {'count': self.count_plays}
+
+								def get_data():
+								    for var in self.requested_variables:
+								        p1, p2, method = var.split('_')
+								        data = self.trim_data(p1, p2)
+								        self.output[var] = self.method_dict[method](data)
+								    return self.output
+							</code></pre>
+					</section>
 				</section>
 
 				<section>
